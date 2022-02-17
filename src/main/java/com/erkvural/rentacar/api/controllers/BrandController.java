@@ -3,6 +3,8 @@ package com.erkvural.rentacar.api.controllers;
 import com.erkvural.rentacar.business.abstracts.BrandService;
 import com.erkvural.rentacar.business.dtos.ListBrandDto;
 import com.erkvural.rentacar.business.requests.brand.CreateBrandRequest;
+import com.erkvural.rentacar.business.requests.brand.DeleteBrandRequest;
+import com.erkvural.rentacar.business.requests.brand.UpdateBrandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,4 +36,13 @@ public class BrandController {
         this.brandService.add(createBrandRequest);
     }
 
+    @PostMapping("/update")
+    public void update(@RequestBody UpdateBrandRequest updateBrandRequest) {
+        this.brandService.update(updateBrandRequest);
+    }
+
+    @DeleteMapping("/Delete")
+    public void delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
+        this.brandService.delete(deleteBrandRequest);
+    }
 }

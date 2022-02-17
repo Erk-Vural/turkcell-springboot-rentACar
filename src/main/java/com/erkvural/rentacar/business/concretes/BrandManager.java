@@ -3,6 +3,8 @@ package com.erkvural.rentacar.business.concretes;
 import com.erkvural.rentacar.business.abstracts.BrandService;
 import com.erkvural.rentacar.business.dtos.ListBrandDto;
 import com.erkvural.rentacar.business.requests.brand.CreateBrandRequest;
+import com.erkvural.rentacar.business.requests.brand.DeleteBrandRequest;
+import com.erkvural.rentacar.business.requests.brand.UpdateBrandRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.dataAccess.abstracts.BrandDao;
 import com.erkvural.rentacar.entities.concretes.Brand;
@@ -54,5 +56,27 @@ public class BrandManager implements BrandService {
         if (!checkBrandNameExist(brand)) {
             brandDao.save(brand);
         }
+    }
+
+    @Override
+    public void update(UpdateBrandRequest updateBrandRequest) {
+        Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
+
+        if(this.brandDao.getBrandByBrandId(brand.getBrandId()) == null) {
+            System.out.println("Can't find brand by Id to update");
+        }
+
+        this.brandDao.save(brand);
+    }
+
+    @Override
+    public void delete(DeleteBrandRequest deleteBrandRequest) {
+        Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
+
+        if(this.brandDao.getBrandByBrandId(brand.getBrandId()) == null) {
+            System.out.println("Can't find brand by Id to update");
+        }
+
+        this.brandDao.deleteById(brand.getBrandId());
     }
 }

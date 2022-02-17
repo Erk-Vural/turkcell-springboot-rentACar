@@ -38,7 +38,7 @@ public class ColorController {
     }
 
     @PostMapping("/update")
-    public void add(@RequestBody UpdateColorRequest updateColorRequest) {
+    public void update(@RequestBody UpdateColorRequest updateColorRequest) {
         this.colorService.update(updateColorRequest);
     }
 
