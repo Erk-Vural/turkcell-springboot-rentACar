@@ -2,7 +2,7 @@ package com.erkvural.rentacar.business.concretes;
 
 import com.erkvural.rentacar.business.abstracts.CarService;
 import com.erkvural.rentacar.business.dtos.ListCarDto;
-import com.erkvural.rentacar.business.requests.CreateCarRequest;
+import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.dataAccess.abstracts.CarDao;
 import com.erkvural.rentacar.entities.concretes.Car;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service

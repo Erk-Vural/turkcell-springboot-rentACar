@@ -1,4 +1,4 @@
-package com.erkvural.rentacar.business.requests;
+package com.erkvural.rentacar.business.requests.brand;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateColorRequest {
-    private String colorName;
+public class CreateBrandRequest {
+    private String brandName;
 }

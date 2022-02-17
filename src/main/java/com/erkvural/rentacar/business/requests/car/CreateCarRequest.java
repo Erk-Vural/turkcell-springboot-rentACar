@@ -1,4 +1,4 @@
-package com.erkvural.rentacar.business.requests;
+package com.erkvural.rentacar.business.requests.car;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

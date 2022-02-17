@@ -2,7 +2,7 @@ package com.erkvural.rentacar.api.controllers;
 
 import com.erkvural.rentacar.business.abstracts.BrandService;
 import com.erkvural.rentacar.business.dtos.ListBrandDto;
-import com.erkvural.rentacar.business.requests.CreateBrandRequest;
+import com.erkvural.rentacar.business.requests.brand.CreateBrandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

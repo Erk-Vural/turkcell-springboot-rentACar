@@ -2,7 +2,7 @@ package com.erkvural.rentacar.api.controllers;
 
 import com.erkvural.rentacar.business.abstracts.CarService;
 import com.erkvural.rentacar.business.dtos.ListCarDto;
-import com.erkvural.rentacar.business.requests.CreateCarRequest;
+import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +29,7 @@ public class CarController {
         return carService.getById(id);
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public void add(@RequestBody CreateCarRequest createCarRequest) {
         this.carService.add(createCarRequest);
     }

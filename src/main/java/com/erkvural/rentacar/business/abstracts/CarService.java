@@ -1,7 +1,7 @@
 package com.erkvural.rentacar.business.abstracts;
 
 import com.erkvural.rentacar.business.dtos.ListCarDto;
-import com.erkvural.rentacar.business.requests.CreateCarRequest;
+import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
