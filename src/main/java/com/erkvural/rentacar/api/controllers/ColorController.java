@@ -29,7 +29,7 @@ public class ColorController {
         return colorService.getColorByColorId(id);
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public void add(@RequestBody CreateColorRequest createColorRequest) {
         this.colorService.add(createColorRequest);
     }

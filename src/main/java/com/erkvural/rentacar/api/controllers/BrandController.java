@@ -4,14 +4,12 @@ import com.erkvural.rentacar.business.abstracts.BrandService;
 import com.erkvural.rentacar.business.dtos.ListBrandDto;
 import com.erkvural.rentacar.business.requests.CreateBrandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/brands")
 public class BrandController {
 
     private final BrandService brandService;
@@ -31,7 +29,7 @@ public class BrandController {
         return brandService.getBrandByBrandId(id);
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public void add(@RequestBody CreateBrandRequest createBrandRequest) {
         this.brandService.add(createBrandRequest);
     }
