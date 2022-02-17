@@ -26,7 +26,7 @@ public class ColorController {
 
     @GetMapping("/get")
     public ListColorDto get(@RequestParam int id) {
-        return colorService.getColorByColorId(id);
+        return colorService.getById(id);
     }
 
     @PostMapping("/add")

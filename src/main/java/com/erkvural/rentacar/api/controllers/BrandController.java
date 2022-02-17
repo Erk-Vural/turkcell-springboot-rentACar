@@ -26,7 +26,7 @@ public class BrandController {
 
     @GetMapping("/get")
     public ListBrandDto get(@RequestParam int id) {
-        return brandService.getBrandByBrandId(id);
+        return brandService.getById(id);
     }
 
     @PostMapping("/add")

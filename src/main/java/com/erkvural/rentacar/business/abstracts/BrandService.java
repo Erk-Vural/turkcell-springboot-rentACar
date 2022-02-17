@@ -12,8 +12,8 @@ public interface BrandService {
 
     List<ListBrandDto> getAll();
 
-    void add(CreateBrandRequest createBrandRequest);
+    ListBrandDto getById(int id);
 
-    ListBrandDto getBrandByBrandId(int id);
+    void add(CreateBrandRequest createBrandRequest);
 
 }

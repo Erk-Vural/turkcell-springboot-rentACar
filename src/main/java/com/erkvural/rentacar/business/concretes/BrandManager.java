@@ -37,15 +37,7 @@ public class BrandManager implements BrandService {
     }
 
     @Override
-    public void add(CreateBrandRequest createBrandRequest) {
-        Brand brand = modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-        if (!checkBrandNameExist(brand)) {
-            brandDao.save(brand);
-        }
-    }
-
-    @Override
-    public ListBrandDto getBrandByBrandId(int id) {
+    public ListBrandDto getById(int id) {
         Brand brand = brandDao.getById(id);
         ListBrandDto response = modelMapperService.forDto().map(brand, ListBrandDto.class);
 
@@ -54,5 +46,13 @@ public class BrandManager implements BrandService {
 
     private boolean checkBrandNameExist(Brand brand) {
         return Objects.nonNull(brandDao.getBrandByBrandName(brand.getBrandName()));
+    }
+
+    @Override
+    public void add(CreateBrandRequest createBrandRequest) {
+        Brand brand = modelMapperService.forRequest().map(createBrandRequest, Brand.class);
+        if (!checkBrandNameExist(brand)) {
+            brandDao.save(brand);
+        }
     }
 }
