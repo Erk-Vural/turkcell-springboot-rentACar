@@ -39,7 +39,7 @@ public class ColorManager implements ColorService {
     public void add(CreateColorRequest createColorRequest) {
         Color color = modelMapperService.forRequest().map(createColorRequest, Color.class);
 
-        if(!doesColorNameExist(color)) {
+        if(!checkColorNameExist(color)) {
             colorDao.save(color);
         }
     }
@@ -52,7 +52,7 @@ public class ColorManager implements ColorService {
         return response;
     }
 
-    private boolean doesColorNameExist(Color color) {
+    private boolean checkColorNameExist(Color color) {
         return Objects.nonNull(colorDao.getColorByColorName(color.getColorName()));
     }
 }
