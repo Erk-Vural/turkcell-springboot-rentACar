@@ -5,7 +5,6 @@ import com.erkvural.rentacar.business.dtos.ListColorDto;
 import com.erkvural.rentacar.business.requests.color.CreateColorRequest;
 import com.erkvural.rentacar.business.requests.color.DeleteColorRequest;
 import com.erkvural.rentacar.business.requests.color.UpdateColorRequest;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
