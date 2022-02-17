@@ -3,6 +3,8 @@ package com.erkvural.rentacar.business.concretes;
 import com.erkvural.rentacar.business.abstracts.CarService;
 import com.erkvural.rentacar.business.dtos.ListCarDto;
 import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
+import com.erkvural.rentacar.business.requests.car.DeleteCarRequest;
+import com.erkvural.rentacar.business.requests.car.UpdateCarRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.dataAccess.abstracts.CarDao;
 import com.erkvural.rentacar.entities.concretes.Car;
@@ -47,5 +49,27 @@ public class CarManager implements CarService {
         Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
 
         carDao.save(car);
+    }
+
+    @Override
+    public void update(UpdateCarRequest updateCarRequest) {
+        Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
+
+        if(this.carDao.getCarByCarId(car.getCarId()) == null) {
+            System.out.println("Can't find car by Id to update");
+        }
+
+        this.carDao.save(car);
+    }
+
+    @Override
+    public void delete(DeleteCarRequest deleteCarRequest) {
+        Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
+
+        if(this.carDao.getCarByCarId(car.getCarId()) == null) {
+            System.out.println("Can't find car by Id to delete");
+        }
+
+        this.carDao.deleteById(car.getCarId());
     }
 }

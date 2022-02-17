@@ -74,7 +74,7 @@ public class BrandManager implements BrandService {
         Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
 
         if(this.brandDao.getBrandByBrandId(brand.getBrandId()) == null) {
-            System.out.println("Can't find brand by Id to update");
+            System.out.println("Can't find brand by Id to delete");
         }
 
         this.brandDao.deleteById(brand.getBrandId());

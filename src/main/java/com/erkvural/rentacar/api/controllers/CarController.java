@@ -3,6 +3,8 @@ package com.erkvural.rentacar.api.controllers;
 import com.erkvural.rentacar.business.abstracts.CarService;
 import com.erkvural.rentacar.business.dtos.ListCarDto;
 import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
+import com.erkvural.rentacar.business.requests.car.DeleteCarRequest;
+import com.erkvural.rentacar.business.requests.car.UpdateCarRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,4 +36,13 @@ public class CarController {
         this.carService.add(createCarRequest);
     }
 
+    @PostMapping("/update")
+    public void update(@RequestBody UpdateCarRequest updateCarRequest) {
+        this.carService.update(updateCarRequest);
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestBody DeleteCarRequest deleteCarRequest) {
+        this.carService.delete(deleteCarRequest);
+    }
 }
