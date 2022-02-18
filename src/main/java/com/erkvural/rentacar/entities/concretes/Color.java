@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,4 +21,7 @@ public class Color {
 
     @Column(name = "color_name")
     private String colorName;
+
+    @OneToMany(mappedBy = "color")
+    private List<Car> cars;
 }
