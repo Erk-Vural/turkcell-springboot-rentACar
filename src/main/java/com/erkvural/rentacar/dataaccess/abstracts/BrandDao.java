@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BrandDao extends JpaRepository<Brand, Integer> {
 
-    Brand getBrandById(int brandId);
+    Brand getBrandById(int id);
 
     Brand getBrandByName(String name);
 }
