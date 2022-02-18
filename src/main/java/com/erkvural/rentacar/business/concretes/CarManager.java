@@ -6,7 +6,7 @@ import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
 import com.erkvural.rentacar.business.requests.car.DeleteCarRequest;
 import com.erkvural.rentacar.business.requests.car.UpdateCarRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
-import com.erkvural.rentacar.dataAccess.abstracts.CarDao;
+import com.erkvural.rentacar.dataaccess.abstracts.CarDao;
 import com.erkvural.rentacar.entities.concretes.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +55,7 @@ public class CarManager implements CarService {
     public void update(UpdateCarRequest updateCarRequest) {
         Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 
-        if(checkCarIdExist(car)) {
+        if (checkCarIdExist(car)) {
             this.carDao.save(car);
         }
     }
@@ -64,17 +64,13 @@ public class CarManager implements CarService {
     public void delete(DeleteCarRequest deleteCarRequest) {
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 
-        if(checkCarIdExist(car)) {
+        if (checkCarIdExist(car)) {
             this.carDao.deleteById(car.getId());
         }
     }
 
     private boolean checkCarIdExist(Car car) {
 
-        if (this.carDao.getCarById(car.getId()) != null) {
-            return true;
-        }
-        System.out.println("Can't find car by Id to operate");
-        return false;
+        return this.carDao.getCarById(car.getId()) != null;
     }
 }

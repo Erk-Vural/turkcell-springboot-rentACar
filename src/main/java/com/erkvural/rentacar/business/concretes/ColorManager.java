@@ -6,7 +6,7 @@ import com.erkvural.rentacar.business.requests.color.CreateColorRequest;
 import com.erkvural.rentacar.business.requests.color.DeleteColorRequest;
 import com.erkvural.rentacar.business.requests.color.UpdateColorRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
-import com.erkvural.rentacar.dataAccess.abstracts.ColorDao;
+import com.erkvural.rentacar.dataaccess.abstracts.ColorDao;
 import com.erkvural.rentacar.entities.concretes.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,10 +79,6 @@ public class ColorManager implements ColorService {
 
     private boolean checkColorIdExist(Color color) {
 
-        if (this.colorDao.getColorById(color.getId()) != null) {
-            return true;
-        }
-        System.out.println("Can't find color by Id to operate");
-        return false;
+        return this.colorDao.getColorById(color.getId()) != null;
     }
 }
