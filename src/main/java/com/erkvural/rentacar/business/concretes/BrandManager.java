@@ -8,6 +8,7 @@ import com.erkvural.rentacar.business.requests.brand.UpdateBrandRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.dataAccess.abstracts.BrandDao;
 import com.erkvural.rentacar.entities.concretes.Brand;
+import com.erkvural.rentacar.entities.concretes.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,21 +63,26 @@ public class BrandManager implements BrandService {
     public void update(UpdateBrandRequest updateBrandRequest) {
         Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 
-        if(this.brandDao.getBrandByBrandId(brand.getBrandId()) == null) {
-            System.out.println("Can't find brand by Id to update");
+        if(checkBrandIdExist(brand)) {
+            this.brandDao.save(brand);
         }
-
-        this.brandDao.save(brand);
     }
 
     @Override
     public void delete(DeleteBrandRequest deleteBrandRequest) {
         Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
 
-        if(this.brandDao.getBrandByBrandId(brand.getBrandId()) == null) {
-            System.out.println("Can't find brand by Id to delete");
-        }
+        if(checkBrandIdExist(brand)) {
+            this.brandDao.deleteById(brand.getBrandId());
+    }
+    }
 
-        this.brandDao.deleteById(brand.getBrandId());
+    private boolean checkBrandIdExist(Brand brand) {
+
+        if (this.brandDao.getBrandByBrandId(brand.getBrandId()) != null) {
+            return true;
+        }
+        System.out.println("Can't find brand by Id to operate");
+        return false;
     }
 }

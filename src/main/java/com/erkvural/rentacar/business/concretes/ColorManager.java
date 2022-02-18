@@ -32,7 +32,7 @@ public class ColorManager implements ColorService {
         List<ListColorDto> response = result.stream()
                 .map(color -> modelMapperService.forDto()
                         .map(color, ListColorDto.class))
-                            .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         return response;
     }
@@ -53,8 +53,8 @@ public class ColorManager implements ColorService {
     public void add(CreateColorRequest createColorRequest) {
         Color color = modelMapperService.forRequest().map(createColorRequest, Color.class);
 
-        if(!checkColorNameExist(color)) {
-            colorDao.save(color);
+        if (!checkColorNameExist(color)) {
+            this.colorDao.save(color);
         }
     }
 
@@ -62,21 +62,27 @@ public class ColorManager implements ColorService {
     public void update(UpdateColorRequest updateColorRequest) {
         Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 
-        if(this.colorDao.getColorByColorId(color.getColorId()) == null) {
-            System.out.println("Can't find color by Id to update");
+        if (checkColorIdExist(color)) {
+            this.colorDao.save(color);
         }
-
-        this.colorDao.save(color);
     }
 
     @Override
     public void delete(DeleteColorRequest deleteColorRequest) {
         Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 
-        if(this.colorDao.getColorByColorId(color.getColorId()) == null) {
-            System.out.println("Can't find color by Id to delete");
+        if (checkColorIdExist(color)) {
+            this.colorDao.deleteById(color.getColorId());
         }
 
-        this.colorDao.deleteById(color.getColorId());
+    }
+
+    private boolean checkColorIdExist(Color color) {
+
+        if (this.colorDao.getColorByColorId(color.getColorId()) != null) {
+            return true;
+        }
+        System.out.println("Can't find color by Id to operate");
+        return false;
     }
 }
