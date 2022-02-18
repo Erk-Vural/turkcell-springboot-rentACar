@@ -27,7 +27,7 @@ public class BrandController {
     }
 
     @GetMapping("/get")
-    public ListBrandDto get(@RequestParam int id) {
+    public ListBrandDto get(@RequestParam("id") int id) {
         return brandService.getById(id);
     }
 
@@ -36,7 +36,7 @@ public class BrandController {
         this.brandService.add(createBrandRequest);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public void update(@RequestBody UpdateBrandRequest updateBrandRequest) {
         this.brandService.update(updateBrandRequest);
     }

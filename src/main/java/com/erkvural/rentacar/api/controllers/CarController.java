@@ -27,7 +27,7 @@ public class CarController {
     }
 
     @GetMapping("/get")
-    public ListCarDto get(@RequestParam int id) {
+    public ListCarDto get(@RequestParam("id") int id) {
         return carService.getById(id);
     }
 
@@ -36,7 +36,7 @@ public class CarController {
         this.carService.add(createCarRequest);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public void update(@RequestBody UpdateCarRequest updateCarRequest) {
         this.carService.update(updateCarRequest);
     }
