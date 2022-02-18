@@ -8,7 +8,6 @@ import com.erkvural.rentacar.business.requests.car.UpdateCarRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.dataAccess.abstracts.CarDao;
 import com.erkvural.rentacar.entities.concretes.Car;
-import com.erkvural.rentacar.entities.concretes.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,13 +65,13 @@ public class CarManager implements CarService {
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 
         if(checkCarIdExist(car)) {
-            this.carDao.deleteById(car.getCarId());
+            this.carDao.deleteById(car.getId());
         }
     }
 
     private boolean checkCarIdExist(Car car) {
 
-        if (this.carDao.getCarByCarId(car.getCarId()) != null) {
+        if (this.carDao.getCarById(car.getId()) != null) {
             return true;
         }
         System.out.println("Can't find car by Id to operate");

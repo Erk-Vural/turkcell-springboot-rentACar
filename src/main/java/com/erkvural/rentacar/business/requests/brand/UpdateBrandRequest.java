@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateBrandRequest {
 
-    private int brandId;
+    private int id;
 
-    private String brandName;
+    private String name;
 }

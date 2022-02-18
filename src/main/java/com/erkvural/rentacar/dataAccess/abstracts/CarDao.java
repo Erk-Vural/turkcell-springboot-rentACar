@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CarDao extends JpaRepository<Car, Integer> {
 
-    Car getByCarId(int carId);
+    Car getCarById(int carId);
 
-    Car getCarByCarId(int carId);
 }

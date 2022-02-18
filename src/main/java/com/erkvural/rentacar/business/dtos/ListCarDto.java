@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class ListCarDto {
 
-    private int carId;
+    private int id;
 
     private double dailyPrice;
 

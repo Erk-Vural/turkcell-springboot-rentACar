@@ -46,7 +46,7 @@ public class ColorManager implements ColorService {
     }
 
     private boolean checkColorNameExist(Color color) {
-        return Objects.nonNull(colorDao.getColorByColorName(color.getColorName()));
+        return Objects.nonNull(colorDao.getColorByName(color.getName()));
     }
 
     @Override
@@ -72,14 +72,14 @@ public class ColorManager implements ColorService {
         Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 
         if (checkColorIdExist(color)) {
-            this.colorDao.deleteById(color.getColorId());
+            this.colorDao.deleteById(color.getId());
         }
 
     }
 
     private boolean checkColorIdExist(Color color) {
 
-        if (this.colorDao.getColorByColorId(color.getColorId()) != null) {
+        if (this.colorDao.getColorById(color.getId()) != null) {
             return true;
         }
         System.out.println("Can't find color by Id to operate");

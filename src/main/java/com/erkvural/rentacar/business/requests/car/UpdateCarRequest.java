@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCarRequest {
-    private int carId;
+    private int id;
 
     private double dailyPrice;
 
