@@ -1,11 +1,13 @@
 package com.erkvural.rentacar.business.concretes;
 
 import com.erkvural.rentacar.business.abstracts.CarService;
-import com.erkvural.rentacar.business.dtos.ListCarDto;
+import com.erkvural.rentacar.business.dtos.BrandDto;
+import com.erkvural.rentacar.business.dtos.CarDto;
 import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
 import com.erkvural.rentacar.business.requests.car.DeleteCarRequest;
 import com.erkvural.rentacar.business.requests.car.UpdateCarRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
+import com.erkvural.rentacar.core.utilities.results.*;
 import com.erkvural.rentacar.dataaccess.abstracts.CarDao;
 import com.erkvural.rentacar.entities.concretes.Car;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,47 +28,59 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public List<ListCarDto> getAll() {
+    public DataResult<List<CarDto>> getAll() {
         List<Car> result = carDao.findAll();
-        List<ListCarDto> response = result.stream()
+        List<CarDto> response = result.stream()
                 .map(car -> modelMapperService.forDto()
-                        .map(car, ListCarDto.class))
+                        .map(car, CarDto.class))
                 .collect(Collectors.toList());
 
-        return response;
+        return new SuccessDataResult<List<CarDto>>("Success", response);
     }
 
     @Override
-    public ListCarDto getById(int id) {
+    public DataResult<CarDto> getById(int id) {
         Car car = carDao.getById(id);
-        ListCarDto response = modelMapperService.forDto().map(car, ListCarDto.class);
 
-        return response;
+        if (car != null) {
+            CarDto response = modelMapperService.forDto().map(car, CarDto.class);
+
+            return new SuccessDataResult<CarDto>("Car with given ID found.", response);
+        }
+        return new ErrorDataResult<CarDto>("Car with given ID can't be found.");
     }
 
     @Override
-    public void add(CreateCarRequest createCarRequest) {
+    public Result add(CreateCarRequest createCarRequest) {
         Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
 
-        carDao.save(car);
+        this.carDao.save(car);
+
+        return new SuccessResult("Car added: " + car.getBrand() + ", " + car.getColor());
     }
 
     @Override
-    public void update(UpdateCarRequest updateCarRequest) {
+    public Result update(UpdateCarRequest updateCarRequest) {
         Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 
         if (checkCarIdExist(car)) {
             this.carDao.save(car);
+
+            return new SuccessResult("Car updated: " + car.getBrand() + ", " + car.getColor());
         }
+        return new ErrorResult("Car can't be updated (Brand with given Id not exists) " + car.getBrand() + ", " + car.getColor());
     }
 
     @Override
-    public void delete(DeleteCarRequest deleteCarRequest) {
+    public Result delete(DeleteCarRequest deleteCarRequest) {
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 
         if (checkCarIdExist(car)) {
             this.carDao.deleteById(car.getId());
+
+            return new SuccessResult("Car deleted: "  + car.getBrand() + ", " + car.getColor());
         }
+        return new ErrorResult("Car can't be deleted (Car with given Id not exists) "  + car.getBrand() + ", " + car.getColor());
     }
 
     private boolean checkCarIdExist(Car car) {

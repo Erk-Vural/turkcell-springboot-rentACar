@@ -1,11 +1,13 @@
 package com.erkvural.rentacar.business.concretes;
 
 import com.erkvural.rentacar.business.abstracts.ColorService;
-import com.erkvural.rentacar.business.dtos.ListColorDto;
+import com.erkvural.rentacar.business.dtos.BrandDto;
+import com.erkvural.rentacar.business.dtos.ColorDto;
 import com.erkvural.rentacar.business.requests.color.CreateColorRequest;
 import com.erkvural.rentacar.business.requests.color.DeleteColorRequest;
 import com.erkvural.rentacar.business.requests.color.UpdateColorRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
+import com.erkvural.rentacar.core.utilities.results.*;
 import com.erkvural.rentacar.dataaccess.abstracts.ColorDao;
 import com.erkvural.rentacar.entities.concretes.Color;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,58 +29,72 @@ public class ColorManager implements ColorService {
     }
 
     @Override
-    public List<ListColorDto> getAll() {
+    public DataResult<List<ColorDto>> getAll() {
         List<Color> result = colorDao.findAll();
-        List<ListColorDto> response = result.stream()
+        List<ColorDto> response = result.stream()
                 .map(color -> modelMapperService.forDto()
-                        .map(color, ListColorDto.class))
+                        .map(color, ColorDto.class))
                 .collect(Collectors.toList());
 
-        return response;
+        return new SuccessDataResult<List<ColorDto>>("Success", response);
     }
 
     @Override
-    public ListColorDto getById(int id) {
+    public DataResult<ColorDto> getById(int id) {
         Color color = colorDao.getById(id);
-        ListColorDto response = modelMapperService.forDto().map(color, ListColorDto.class);
 
-        return response;
-    }
+        if (color != null) {
+            ColorDto response = modelMapperService.forDto().map(color, ColorDto.class);
 
-    private boolean checkColorNameExist(Color color) {
-        return Objects.nonNull(colorDao.getColorByName(color.getName()));
+            return new SuccessDataResult<ColorDto>("Color with given ID found.", response);
+        }
+
+        return new ErrorDataResult<ColorDto>("Color with given ID can't be found.");
     }
 
     @Override
-    public void add(CreateColorRequest createColorRequest) {
+    public Result add(CreateColorRequest createColorRequest) {
         Color color = modelMapperService.forRequest().map(createColorRequest, Color.class);
 
         if (!checkColorNameExist(color)) {
             this.colorDao.save(color);
+
+            return new SuccessResult("Color added: " + color.getName());
         }
+        return new ErrorResult("Color can't be added (Color with same name exists) " + color.getName());
     }
 
     @Override
-    public void update(UpdateColorRequest updateColorRequest) {
+    public Result update(UpdateColorRequest updateColorRequest) {
         Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 
         if (checkColorIdExist(color)) {
             this.colorDao.save(color);
+
+            return new SuccessResult("Color updated: " + color.getName());
         }
+        return new ErrorResult("Color can't be updated (Color with given Id not exists) " + color.getName());
     }
 
     @Override
-    public void delete(DeleteColorRequest deleteColorRequest) {
+    public Result delete(DeleteColorRequest deleteColorRequest) {
         Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 
         if (checkColorIdExist(color)) {
             this.colorDao.deleteById(color.getId());
-        }
 
+            return new SuccessResult("Color deleted: " + color.getName());
+        }
+        return new ErrorResult("Color can't be deleted (Color with given Id not exists) " + color.getName());
     }
 
     private boolean checkColorIdExist(Color color) {
 
         return this.colorDao.getColorById(color.getId()) != null;
     }
+
+    private boolean checkColorNameExist(Color color) {
+        return Objects.nonNull(colorDao.getColorByName(color.getName()));
+    }
+
 }

@@ -1,10 +1,13 @@
 package com.erkvural.rentacar.api.controllers;
 
 import com.erkvural.rentacar.business.abstracts.ColorService;
-import com.erkvural.rentacar.business.dtos.ListColorDto;
+import com.erkvural.rentacar.business.dtos.ColorDto;
 import com.erkvural.rentacar.business.requests.color.CreateColorRequest;
 import com.erkvural.rentacar.business.requests.color.DeleteColorRequest;
 import com.erkvural.rentacar.business.requests.color.UpdateColorRequest;
+import com.erkvural.rentacar.core.utilities.results.DataResult;
+import com.erkvural.rentacar.core.utilities.results.ErrorResult;
+import com.erkvural.rentacar.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,27 +25,39 @@ public class ColorController {
     }
 
     @GetMapping("/getAll")
-    public List<ListColorDto> getAll() {
+    public DataResult<List<ColorDto>> getAll() {
         return colorService.getAll();
     }
 
     @GetMapping("/get")
-    public ListColorDto get(@RequestParam("id") int id) {
+    public DataResult<ColorDto> get(@RequestParam("id") int id) {
         return colorService.getById(id);
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody CreateColorRequest createColorRequest) {
-        this.colorService.add(createColorRequest);
+    public Result add(@RequestBody CreateColorRequest createColorRequest) {
+        try {
+            return this.colorService.add(createColorRequest);
+        } catch (Exception e) {
+            return new ErrorResult(e.getMessage());
+        }
     }
 
     @PutMapping("/update")
-    public void update(@RequestBody UpdateColorRequest updateColorRequest) {
-        this.colorService.update(updateColorRequest);
+    public Result update(@RequestBody UpdateColorRequest updateColorRequest) {
+        try {
+            return this.colorService.update(updateColorRequest);
+        } catch (Exception e) {
+            return new ErrorResult(e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestBody DeleteColorRequest deleteColorRequest) {
-        this.colorService.delete(deleteColorRequest);
+    public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) {
+        try {
+            return this.colorService.delete(deleteColorRequest);
+        } catch (Exception e) {
+            return new ErrorResult(e.getMessage());
+        }
     }
 }

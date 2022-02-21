@@ -1,17 +1,13 @@
 package com.erkvural.rentacar.business.dtos;
 
-import com.erkvural.rentacar.entities.concretes.Brand;
-import com.erkvural.rentacar.entities.concretes.Color;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListCarDto {
+public class CarDto {
 
     private int id;
 
