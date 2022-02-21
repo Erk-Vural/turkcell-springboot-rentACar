@@ -11,6 +11,9 @@ import com.erkvural.rentacar.core.utilities.results.*;
 import com.erkvural.rentacar.dataaccess.abstracts.CarDao;
 import com.erkvural.rentacar.entities.concretes.Car;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,6 +54,48 @@ public class CarManager implements CarService {
     }
 
     @Override
+    public DataResult<List<CarDto>> getAllPaged(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+        List<Car> result = this.carDao.findAll(pageable).getContent();
+        List<CarDto> response = result.stream()
+                .map(car -> this.modelMapperService.forDto()
+                        .map(car, CarDto.class))
+                .collect(Collectors.toList());
+
+        return new SuccessDataResult<List<CarDto>>(response);
+    }
+
+    @Override
+    public DataResult<List<CarDto>> getAllSorted(Sort.Direction direction) {
+        Sort s = Sort.by(direction, "dailyPrice");
+
+        List<Car> result = this.carDao.findAll(s);
+        List<CarDto> response = result.stream()
+                .map(car -> this.modelMapperService.forDto()
+                        .map(car, CarDto.class))
+                .collect(Collectors.toList());
+
+        return new SuccessDataResult<List<CarDto>>(response);
+    }
+
+    @Override
+    public DataResult<List<CarDto>> getAllByDailyPriceLessThanEqual(double dailyPrice) {
+        List<Car> result = this.carDao.getCarByDailyPriceLessThanEqual(dailyPrice);
+
+        if (result.isEmpty()) {
+            return new ErrorDataResult<List<CarDto>>("No results");
+        }
+
+        List<CarDto> response = result.stream()
+                .map(car -> this.modelMapperService.forDto()
+                        .map(car, CarDto.class))
+                .collect(Collectors.toList());
+
+        return new SuccessDataResult<List<CarDto>>("Results Listed.", response);
+    }
+
+    @Override
     public Result add(CreateCarRequest createCarRequest) {
         Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
 
@@ -78,9 +123,9 @@ public class CarManager implements CarService {
         if (checkCarIdExist(car)) {
             this.carDao.deleteById(car.getId());
 
-            return new SuccessResult("Car deleted: "  + car.getBrand() + ", " + car.getColor());
+            return new SuccessResult("Car deleted: " + car.getBrand() + ", " + car.getColor());
         }
-        return new ErrorResult("Car can't be deleted (Car with given Id not exists) "  + car.getBrand() + ", " + car.getColor());
+        return new ErrorResult("Car can't be deleted (Car with given Id not exists) " + car.getBrand() + ", " + car.getColor());
     }
 
     private boolean checkCarIdExist(Car car) {

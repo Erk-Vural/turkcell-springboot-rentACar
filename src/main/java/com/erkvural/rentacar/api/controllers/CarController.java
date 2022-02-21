@@ -9,6 +9,7 @@ import com.erkvural.rentacar.core.utilities.results.DataResult;
 import com.erkvural.rentacar.core.utilities.results.ErrorResult;
 import com.erkvural.rentacar.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,22 @@ public class CarController {
     @GetMapping("/get")
     public DataResult<CarDto> get(@RequestParam("id") int id) {
         return carService.getById(id);
+    }
+
+    @GetMapping("/getAllSorted")
+    public DataResult<List<CarDto>> getAllSorted(@RequestParam("direction") Sort.Direction direction) {
+        return this.carService.getAllSorted(direction);
+    }
+
+    @GetMapping("/getAllPaged")
+    public DataResult<List<CarDto>> getAllPaged(@RequestParam("pageNo") int pageNo,
+                                                @RequestParam("pageSize") int pageSize) {
+        return this.carService.getAllPaged(pageNo, pageSize);
+    }
+
+    @GetMapping("/getAllByDailyPriceLessThanEqual")
+    public DataResult<List<CarDto>> getAllByDailyPriceLessThanEqual(@RequestParam("dailyPrice") double dailyPrice) {
+        return this.getAllByDailyPriceLessThanEqual(dailyPrice);
     }
 
     @PostMapping("/add")
