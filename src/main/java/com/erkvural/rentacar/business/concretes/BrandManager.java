@@ -81,9 +81,9 @@ public class BrandManager implements BrandService {
         if (checkBrandIdExist(brand)) {
             this.brandDao.deleteById(brand.getId());
 
-            return new SuccessResult("Brand deleted: " + brand.getName());
+            return new SuccessResult("Brand deleted with id: " + brand.getId());
         }
-        return new ErrorResult("Brand can't be deleted (Brand with given Id not exists) " + brand.getName());
+        return new ErrorResult("Brand can't be deleted (Brand with given Id not exists) " +  brand.getId());
     }
 
     private boolean checkBrandIdExist(Brand brand) {

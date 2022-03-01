@@ -83,9 +83,9 @@ public class ColorManager implements ColorService {
         if (checkColorIdExist(color)) {
             this.colorDao.deleteById(color.getId());
 
-            return new SuccessResult("Color deleted: " + color.getName());
+            return new SuccessResult("Color deleted with id: " + color.getId());
         }
-        return new ErrorResult("Color can't be deleted (Color with given Id not exists) " + color.getName());
+        return new ErrorResult("Color can't be deleted (Color with given Id not exists) " + color.getId());
     }
 
     private boolean checkColorIdExist(Color color) {

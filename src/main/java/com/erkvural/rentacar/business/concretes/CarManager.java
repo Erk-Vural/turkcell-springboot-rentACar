@@ -97,7 +97,7 @@ public class CarManager implements CarService {
 
     @Override
     public Result add(CreateCarRequest createCarRequest) {
-        Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
+        Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 
         this.carDao.save(car);
 
@@ -113,7 +113,7 @@ public class CarManager implements CarService {
 
             return new SuccessResult("Car updated: " + car.getBrand() + ", " + car.getColor());
         }
-        return new ErrorResult("Car can't be updated (Brand with given Id not exists) " + car.getBrand() + ", " + car.getColor());
+        return new ErrorResult("Car can't be updated (Car with given Id not exists) " + car.getBrand() + ", " + car.getColor());
     }
 
     @Override
@@ -123,9 +123,9 @@ public class CarManager implements CarService {
         if (checkCarIdExist(car)) {
             this.carDao.deleteById(car.getId());
 
-            return new SuccessResult("Car deleted: " + car.getBrand() + ", " + car.getColor());
+            return new SuccessResult("Car deleted with id: " + car.getId());
         }
-        return new ErrorResult("Car can't be deleted (Car with given Id not exists) " + car.getBrand() + ", " + car.getColor());
+        return new ErrorResult("Car can't be deleted (Car with given Id not exists) " +  car.getId());
     }
 
     private boolean checkCarIdExist(Car car) {

@@ -48,7 +48,7 @@ public class CarController {
 
     @GetMapping("/getAllByDailyPriceLessThanEqual")
     public DataResult<List<CarDto>> getAllByDailyPriceLessThanEqual(@RequestParam("dailyPrice") double dailyPrice) {
-        return this.getAllByDailyPriceLessThanEqual(dailyPrice);
+        return this.carService.getAllByDailyPriceLessThanEqual(dailyPrice);
     }
 
     @PostMapping("/add")
