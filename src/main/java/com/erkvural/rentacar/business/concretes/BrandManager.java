@@ -88,7 +88,7 @@ public class BrandManager implements BrandService {
 
     private boolean checkBrandIdExist(Brand brand) {
 
-        return this.brandDao.getBrandById(brand.getId()) != null;
+        return Objects.nonNull(brandDao.getBrandById(brand.getId()));
     }
 
     private boolean checkBrandNameExist(Brand brand) {

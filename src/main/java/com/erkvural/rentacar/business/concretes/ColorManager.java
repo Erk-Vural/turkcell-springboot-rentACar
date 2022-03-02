@@ -90,7 +90,7 @@ public class ColorManager implements ColorService {
 
     private boolean checkColorIdExist(Color color) {
 
-        return this.colorDao.getColorById(color.getId()) != null;
+        return Objects.nonNull(colorDao.getColorById(color.getId()));
     }
 
     private boolean checkColorNameExist(Color color) {

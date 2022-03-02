@@ -1,14 +1,15 @@
 package com.erkvural.rentacar.business.concretes;
 
 import com.erkvural.rentacar.business.abstracts.CarService;
-import com.erkvural.rentacar.business.dtos.BrandDto;
 import com.erkvural.rentacar.business.dtos.CarDto;
 import com.erkvural.rentacar.business.requests.car.CreateCarRequest;
 import com.erkvural.rentacar.business.requests.car.DeleteCarRequest;
 import com.erkvural.rentacar.business.requests.car.UpdateCarRequest;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.core.utilities.results.*;
+import com.erkvural.rentacar.dataaccess.abstracts.BrandDao;
 import com.erkvural.rentacar.dataaccess.abstracts.CarDao;
+import com.erkvural.rentacar.dataaccess.abstracts.ColorDao;
 import com.erkvural.rentacar.entities.concretes.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,16 +18,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class CarManager implements CarService {
     private final CarDao carDao;
+    private final BrandDao brandDao;
+    private final ColorDao colorDao;
     private final ModelMapperService modelMapperService;
 
     @Autowired
-    public CarManager(CarDao carDao, ModelMapperService modelMapperService) {
+    public CarManager(CarDao carDao, BrandDao brandDao, ColorDao colorDao, ModelMapperService modelMapperService) {
         this.carDao = carDao;
+        this.brandDao = brandDao;
+        this.colorDao = colorDao;
         this.modelMapperService = modelMapperService;
     }
 
@@ -98,38 +104,44 @@ public class CarManager implements CarService {
     @Override
     public Result add(CreateCarRequest createCarRequest) {
         Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+        String brandName = brandDao.findById(car.getBrand().getId()).get().getName();
+        String colorName = colorDao.findById(car.getColor().getId()).get().getName();
 
         this.carDao.save(car);
 
-        return new SuccessResult("Car added: " + car.getBrand() + ", " + car.getColor());
+        return new SuccessResult("Car added: " + brandName + ", " + colorName);
     }
 
     @Override
     public Result update(UpdateCarRequest updateCarRequest) {
         Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
+        String brandName = brandDao.findById(car.getBrand().getId()).get().getName();
+        String colorName = colorDao.findById(car.getColor().getId()).get().getName();
 
         if (checkCarIdExist(car)) {
             this.carDao.save(car);
 
-            return new SuccessResult("Car updated: " + car.getBrand() + ", " + car.getColor());
+            return new SuccessResult("Car updated: " + brandName + ", " + colorName);
         }
-        return new ErrorResult("Car can't be updated (Car with given Id not exists) " + car.getBrand() + ", " + car.getColor());
+        return new ErrorResult("Car can't be updated (Car with given Id not exists) " + brandName + ", " + colorName);
     }
 
     @Override
     public Result delete(DeleteCarRequest deleteCarRequest) {
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
+        String brandName = brandDao.findById(car.getBrand().getId()).get().getName();
+        String colorName = colorDao.findById(car.getColor().getId()).get().getName();
 
         if (checkCarIdExist(car)) {
             this.carDao.deleteById(car.getId());
 
             return new SuccessResult("Car deleted with id: " + car.getId());
         }
-        return new ErrorResult("Car can't be deleted (Car with given Id not exists) " +  car.getId());
+        return new ErrorResult("Car can't be deleted (Car with given Id not exists) " + brandName + ", " + colorName);
     }
 
     private boolean checkCarIdExist(Car car) {
 
-        return this.carDao.getCarById(car.getId()) != null;
+        return Objects.nonNull(carDao.getCarById(car.getId()));
     }
 }
