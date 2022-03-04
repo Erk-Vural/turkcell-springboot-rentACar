@@ -8,6 +8,7 @@ import com.erkvural.rentacar.business.requests.carmaintenance.UpdateCarMaintenan
 import com.erkvural.rentacar.core.utilities.results.DataResult;
 import com.erkvural.rentacar.core.utilities.results.ErrorResult;
 import com.erkvural.rentacar.core.utilities.results.Result;
+import com.erkvural.rentacar.core.utilities.results.SuccessDataResult;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,11 @@ public class CarMaintenanceController {
     @GetMapping("/get")
     public DataResult<CarMaintenanceDto> get(@RequestParam("id") int id) {
         return carMaintenanceService.getById(id);
+    }
+
+    @GetMapping("/getByCarId")
+    public SuccessDataResult<List<CarMaintenanceDto>> getByCarId(@RequestParam("id") int id) {
+        return carMaintenanceService.getByCarId(id);
     }
 
     @GetMapping("/getAllSorted")

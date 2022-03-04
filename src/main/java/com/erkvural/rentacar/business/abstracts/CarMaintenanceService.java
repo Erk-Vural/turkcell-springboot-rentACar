@@ -18,6 +18,8 @@ public interface CarMaintenanceService {
 
     SuccessDataResult<CarMaintenanceDto> getById(int id);
 
+    SuccessDataResult<List<CarMaintenanceDto>> getByCarId(int id);
+
     DataResult<List<CarMaintenanceDto>> getAllPaged(int pageNo, int pageSize);
 
     DataResult<List<CarMaintenanceDto>> getAllSorted(Sort.Direction direction);
