@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCarMaintenanceRequest {
+
     private int id;
 
     private String description;
