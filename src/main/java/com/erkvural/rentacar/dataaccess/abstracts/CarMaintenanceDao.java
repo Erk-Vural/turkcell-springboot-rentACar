@@ -9,9 +9,8 @@ import java.util.List;
 
 @Repository
 public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer> {
-    List<CarMaintenance> getCarMaintenanceByCarId(Car carId);
-
-    List<CarMaintenance> deleteCarMaintenanceByCarId(Car carId);
 
     CarMaintenance getCarMaintenanceById(int id);
+
+    List<CarMaintenance> getCarMaintenanceByCarId(Car carId);
 }
