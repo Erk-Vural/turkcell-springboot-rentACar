@@ -129,7 +129,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
             return new SuccessResult("Car maintenance deleted with id: " + carMaintenance.getId());
         }
-        return new ErrorResult("Car maintenance can't be deleted (Car with given Id not exists) " + carMaintenance);
+        return new ErrorResult("Car maintenance can't be deleted (Car maintenance with given Id not exists) " + carMaintenance);
     }
 
     private boolean checkCarIdExist(Car car) {
