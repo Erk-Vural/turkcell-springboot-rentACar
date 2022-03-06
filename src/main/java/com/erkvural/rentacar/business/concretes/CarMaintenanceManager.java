@@ -94,6 +94,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
         CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequest, CarMaintenance.class);
 
+        carMaintenance.setId(0);
         if (checkCarIdExist(carMaintenance.getCarId()) && checkIsRented(carMaintenance)) {
             this.carMaintenanceDao.save(carMaintenance);
 
@@ -140,21 +141,18 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     private boolean checkIsRented(CarMaintenance carMaintenance) {
         List<Rental> result = this.rentalDao.getRentalsByCarId(carMaintenance.getCarId());
 
-        if (result == null) {
-            return true;
-        }
-
-        for (Rental rental : result) {
-
-            if (rental.getReturnDate() != null
-                    && carMaintenance.getReturnDate().isAfter(rental.getRentDate())
-                    && carMaintenance.getReturnDate().isBefore((rental.getReturnDate()))) {
-                return false;
-            }
-            if (rental.getReturnDate() == null
-                    && carMaintenance.getReturnDate().isAfter(rental.getRentDate())
-                    || carMaintenance.getReturnDate().equals(rental.getRentDate())) {
-                return false;
+        if (result != null) {
+            for (Rental rental : result) {
+                if (rental.getReturnDate() != null
+                        && carMaintenance.getReturnDate().isAfter(rental.getRentDate())
+                        && carMaintenance.getReturnDate().isBefore((rental.getReturnDate()))) {
+                    return false;
+                }
+                if (rental.getReturnDate() == null
+                        && carMaintenance.getReturnDate().isAfter(rental.getRentDate())
+                        || carMaintenance.getReturnDate().equals(rental.getRentDate())) {
+                    return false;
+                }
             }
         }
         return true;

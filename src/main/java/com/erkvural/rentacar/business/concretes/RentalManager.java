@@ -168,13 +168,12 @@ public class RentalManager implements RentalService {
     private boolean checkIsUnderMaintenance(Rental rental) {
         List<CarMaintenance> result = this.carMaintenanceDao.getCarMaintenanceByCarId(rental.getCarId());
 
-        if (result == null) {
-            return true;
-        }
-
-        for (CarMaintenance carMaintenance : result) {
-            if (rental.getRentDate().isBefore(carMaintenance.getReturnDate()) || rental.getReturnDate().isBefore(carMaintenance.getReturnDate())) {
-                return false;
+        if (result != null) {
+            for (CarMaintenance carMaintenance : result) {
+                if (rental.getRentDate().isBefore(carMaintenance.getReturnDate())
+                        || rental.getReturnDate().isBefore(carMaintenance.getReturnDate())) {
+                    return false;
+                }
             }
         }
         return true;
