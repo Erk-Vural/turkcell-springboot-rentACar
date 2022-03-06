@@ -83,7 +83,7 @@ public class BrandManager implements BrandService {
 
             return new SuccessResult("Brand deleted with id: " + brand.getId());
         }
-        return new ErrorResult("Brand can't be deleted (Brand with given Id not exists) " +  brand.getId());
+        return new ErrorResult("Brand can't be deleted (Brand with given Id not exists) " + brand.getId());
     }
 
     private boolean checkBrandIdExist(Brand brand) {

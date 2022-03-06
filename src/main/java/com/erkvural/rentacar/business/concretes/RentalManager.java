@@ -5,14 +5,17 @@ import com.erkvural.rentacar.business.dtos.RentalDto;
 import com.erkvural.rentacar.business.requests.rental.CreateRentalRequest;
 import com.erkvural.rentacar.business.requests.rental.DeleteRentalRequest;
 import com.erkvural.rentacar.business.requests.rental.UpdateRentalRequest;
+import com.erkvural.rentacar.core.exceptions.BusinessException;
 import com.erkvural.rentacar.core.utilities.mapping.ModelMapperService;
 import com.erkvural.rentacar.core.utilities.results.ErrorResult;
 import com.erkvural.rentacar.core.utilities.results.Result;
 import com.erkvural.rentacar.core.utilities.results.SuccessDataResult;
 import com.erkvural.rentacar.core.utilities.results.SuccessResult;
 import com.erkvural.rentacar.dataaccess.abstracts.CarDao;
+import com.erkvural.rentacar.dataaccess.abstracts.CarMaintenanceDao;
 import com.erkvural.rentacar.dataaccess.abstracts.RentalDao;
 import com.erkvural.rentacar.entities.concretes.Car;
+import com.erkvural.rentacar.entities.concretes.CarMaintenance;
 import com.erkvural.rentacar.entities.concretes.Rental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,14 +31,17 @@ import java.util.stream.Collectors;
 public class RentalManager implements RentalService {
     private final RentalDao rentalDao;
     private final CarDao carDao;
+    private final CarMaintenanceDao carMaintenanceDao;
     private final ModelMapperService modelMapperService;
 
     @Autowired
-    public RentalManager(RentalDao rentalDao, CarDao carDao, ModelMapperService modelMapperService) {
+    public RentalManager(RentalDao rentalDao, CarDao carDao, CarMaintenanceDao carMaintenanceDao, ModelMapperService modelMapperService) {
         this.rentalDao = rentalDao;
         this.carDao = carDao;
+        this.carMaintenanceDao = carMaintenanceDao;
         this.modelMapperService = modelMapperService;
     }
+
 
     @Override
     public SuccessDataResult<List<RentalDto>> getAll() {
@@ -116,10 +122,13 @@ public class RentalManager implements RentalService {
     }
 
     @Override
-    public Result add(CreateRentalRequest createRentalRequest) {
+    public Result add(CreateRentalRequest createRentalRequest) throws BusinessException {
         Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 
-        if (checkCarIdExist(rental.getCarId()) && checkCustomerIdExist(rental.getCustomerId())) {
+        if (checkCarIdExist(rental.getCarId())
+                && checkCustomerIdExist(rental.getCustomerId())
+                && checkIsUnderMaintenance(rental)
+        ) {
             this.rentalDao.save(rental);
 
             return new SuccessResult("Rental added: " + rental);
@@ -128,10 +137,10 @@ public class RentalManager implements RentalService {
     }
 
     @Override
-    public Result update(UpdateRentalRequest updateRentalRequest) {
+    public Result update(UpdateRentalRequest updateRentalRequest) throws BusinessException {
         Rental rental = this.modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
 
-        if (checkRentalIdExist(rental)) {
+        if (checkRentalIdExist(rental) && checkIsUnderMaintenance(rental)) {
             this.rentalDao.save(rental);
 
             return new SuccessResult("Rental updated: " + rental);
@@ -166,5 +175,21 @@ public class RentalManager implements RentalService {
     private boolean checkRentalIdExist(Rental rental) {
 
         return Objects.nonNull(rentalDao.getRentalsById(rental.getId()));
+    }
+
+    private boolean checkIsUnderMaintenance(Rental rental) throws BusinessException {
+        List<CarMaintenance> result = this.carMaintenanceDao.getCarMaintenanceByCarId(rental.getCarId());
+
+        if (result == null) {
+            return true;
+        }
+
+        for (CarMaintenance carMaintenance : result) {
+            if (rental.getRentDate().isBefore(carMaintenance.getReturnDate()) ||
+                    rental.getReturnDate().isBefore(carMaintenance.getReturnDate())) {
+                throw new BusinessException("This car is can not be rented, it is under Maintenance");
+            }
+        }
+        return true;
     }
 }

@@ -4,6 +4,7 @@ import com.erkvural.rentacar.business.dtos.RentalDto;
 import com.erkvural.rentacar.business.requests.rental.CreateRentalRequest;
 import com.erkvural.rentacar.business.requests.rental.DeleteRentalRequest;
 import com.erkvural.rentacar.business.requests.rental.UpdateRentalRequest;
+import com.erkvural.rentacar.core.exceptions.BusinessException;
 import com.erkvural.rentacar.core.utilities.results.Result;
 import com.erkvural.rentacar.core.utilities.results.SuccessDataResult;
 import org.springframework.data.domain.Sort;
@@ -27,9 +28,9 @@ public interface RentalService {
 
     SuccessDataResult<List<RentalDto>> getAllRentalDateSorted(Sort.Direction direction);
 
-    Result add(CreateRentalRequest createRentalRequest);
+    Result add(CreateRentalRequest createRentalRequest) throws BusinessException;
 
-    Result update(UpdateRentalRequest updateRentalRequest);
+    Result update(UpdateRentalRequest updateRentalRequest) throws BusinessException;
 
     Result delete(DeleteRentalRequest deleteRentalRequest);
 }

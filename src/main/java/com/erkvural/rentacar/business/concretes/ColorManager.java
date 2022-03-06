@@ -1,7 +1,6 @@
 package com.erkvural.rentacar.business.concretes;
 
 import com.erkvural.rentacar.business.abstracts.ColorService;
-import com.erkvural.rentacar.business.dtos.BrandDto;
 import com.erkvural.rentacar.business.dtos.ColorDto;
 import com.erkvural.rentacar.business.requests.color.CreateColorRequest;
 import com.erkvural.rentacar.business.requests.color.DeleteColorRequest;
