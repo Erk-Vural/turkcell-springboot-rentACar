@@ -94,7 +94,7 @@ public class RentalManager implements RentalService {
 
     @Override
     public SuccessDataResult<List<RentalDto>> getAllReturnDateSorted(Sort.Direction direction) {
-        Sort s = Sort.by(direction, "rentDate");
+        Sort s = Sort.by(direction, "returnDate");
 
         List<Rental> result = this.rentalDao.findAll(s);
         List<RentalDto> response = result.stream().map(rental -> this.modelMapperService.forDto().map(rental, RentalDto.class)).collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class RentalManager implements RentalService {
 
     @Override
     public SuccessDataResult<List<RentalDto>> getAllRentalDateSorted(Sort.Direction direction) {
-        Sort s = Sort.by(direction, "returnDate");
+        Sort s = Sort.by(direction, "rentDate");
 
         List<Rental> result = this.rentalDao.findAll(s);
         List<RentalDto> response = result.stream().map(rental -> this.modelMapperService.forDto().map(rental, RentalDto.class)).collect(Collectors.toList());
@@ -137,7 +137,7 @@ public class RentalManager implements RentalService {
 
                 return new SuccessResult("Rental updated: " + rental);
             }
-            return new ErrorResult("Rental can't be updated (Car is under maintenance at requested times) " + rental);
+            return new ErrorResult("Rental can't be updated (Car is under maintenance at requested times" + rental);
         }
 
         return new ErrorResult("Rental can't be updated (Rental with given Id not exists) " + rental);

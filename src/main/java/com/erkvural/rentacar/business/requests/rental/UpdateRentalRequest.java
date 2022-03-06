@@ -21,5 +21,5 @@ public class UpdateRentalRequest {
 
     private int customerId;
 
-    private Car carId;
+    private int carId;
 }
