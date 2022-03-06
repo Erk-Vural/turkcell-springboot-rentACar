@@ -22,7 +22,7 @@ public class Rental {
     private LocalDate rentDate;
 
     @Column(name = "return_date")
-    private LocalDate returnDate = null;
+    private LocalDate returnDate;
 
     @Column(name="customer_id")
     private int customerId;

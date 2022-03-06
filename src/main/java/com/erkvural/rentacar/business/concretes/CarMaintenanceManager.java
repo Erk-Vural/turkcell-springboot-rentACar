@@ -95,10 +95,13 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequest, CarMaintenance.class);
 
         carMaintenance.setId(0);
-        if (checkCarIdExist(carMaintenance.getCarId()) && checkIsRented(carMaintenance)) {
-            this.carMaintenanceDao.save(carMaintenance);
+        if (checkCarIdExist(carMaintenance.getCarId())) {
+            if (checkIsRented(carMaintenance)) {
+                this.carMaintenanceDao.save(carMaintenance);
 
-            return new SuccessResult("Car maintenance added: " + carMaintenance);
+                return new SuccessResult("Car maintenance added: " + carMaintenance);
+            }
+            return new ErrorResult("Car maintenance can not be added, Car is already rented" + carMaintenance);
         }
         return new ErrorResult("Car maintenance with given carId doesn't exists." + carMaintenance);
     }
@@ -107,10 +110,13 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException {
         CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest, CarMaintenance.class);
 
-        if (checkCarMaintenanceIdExist(carMaintenance) && checkIsRented(carMaintenance)) {
-            this.carMaintenanceDao.save(carMaintenance);
+        if (checkCarMaintenanceIdExist(carMaintenance)) {
+            if (checkIsRented(carMaintenance)) {
+                this.carMaintenanceDao.save(carMaintenance);
 
-            return new SuccessResult("Car maintenance updated: " + carMaintenance);
+                return new SuccessResult("Car maintenance updated: " + carMaintenance);
+            }
+            return new ErrorResult("Car maintenance can not be updated, Car is already rented" + carMaintenance);
         }
 
         return new ErrorResult("Car maintenance can't be updated (Car maintenance with given Id not exists) " + carMaintenance);

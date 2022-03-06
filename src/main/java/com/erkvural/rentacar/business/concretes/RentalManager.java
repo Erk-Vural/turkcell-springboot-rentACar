@@ -116,22 +116,28 @@ public class RentalManager implements RentalService {
     public Result add(CreateRentalRequest createRentalRequest) throws BusinessException {
         Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 
-        if (checkCarIdExist(rental.getCarId()) && checkCustomerIdExist(rental.getCustomerId()) && checkIsUnderMaintenance(rental)) {
-            this.rentalDao.save(rental);
+        if (checkCarIdExist(rental.getCarId())) {
+            if (checkIsUnderMaintenance(rental)) {
+                this.rentalDao.save(rental);
 
-            return new SuccessResult("Rental added: " + rental);
+                return new SuccessResult("Rental added: " + rental);
+            }
+            return new ErrorResult("Rental can't be added (Car is under maintenance at requested times)" + rental);
         }
-        return new ErrorResult("Rental with given carId or customerId doesn't exists." + rental);
+        return new ErrorResult("Rental with given carId doesn't exists." + rental);
     }
 
     @Override
     public Result update(UpdateRentalRequest updateRentalRequest) throws BusinessException {
         Rental rental = this.modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
 
-        if (checkRentalIdExist(rental) && checkIsUnderMaintenance(rental)) {
-            this.rentalDao.save(rental);
+        if (checkRentalIdExist(rental)) {
+            if (checkIsUnderMaintenance(rental)) {
+                this.rentalDao.save(rental);
 
-            return new SuccessResult("Rental updated: " + rental);
+                return new SuccessResult("Rental updated: " + rental);
+            }
+            return new ErrorResult("Rental can't be updated (Car is under maintenance at requested times) " + rental);
         }
 
         return new ErrorResult("Rental can't be updated (Rental with given Id not exists) " + rental);
@@ -153,11 +159,6 @@ public class RentalManager implements RentalService {
     private boolean checkCarIdExist(Car car) {
 
         return Objects.nonNull(carDao.getCarById(car.getId()));
-    }
-
-    private boolean checkCustomerIdExist(int id) {
-
-        return Objects.nonNull(rentalDao.getRentalsByCustomerId(id));
     }
 
     private boolean checkRentalIdExist(Rental rental) {
