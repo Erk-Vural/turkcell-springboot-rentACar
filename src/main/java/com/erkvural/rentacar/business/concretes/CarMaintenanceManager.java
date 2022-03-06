@@ -45,10 +45,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     public DataResult<List<CarMaintenanceDto>> getAll() {
         List<CarMaintenance> result = this.carMaintenanceDao.findAll();
 
-        List<CarMaintenanceDto> response = result.stream()
-                .map(carMaintenance -> this.modelMapperService.forDto()
-                        .map(carMaintenance, CarMaintenanceDto.class))
-                .collect(Collectors.toList());
+        List<CarMaintenanceDto> response = result.stream().map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<CarMaintenanceDto>>("Success", response);
     }
@@ -68,10 +65,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
         List<CarMaintenance> result = this.carMaintenanceDao.getCarMaintenanceByCarId(car);
 
-        List<CarMaintenanceDto> response = result.stream()
-                .map(carMaintenance -> this.modelMapperService.forDto()
-                        .map(carMaintenance, CarMaintenanceDto.class))
-                .collect(Collectors.toList());
+        List<CarMaintenanceDto> response = result.stream().map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<CarMaintenanceDto>>("Success", response);
     }
@@ -81,10 +75,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
         List<CarMaintenance> result = this.carMaintenanceDao.findAll(pageable).getContent();
-        List<CarMaintenanceDto> response = result.stream()
-                .map(carMaintenance -> this.modelMapperService.forDto()
-                        .map(carMaintenance, CarMaintenanceDto.class))
-                .collect(Collectors.toList());
+        List<CarMaintenanceDto> response = result.stream().map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<CarMaintenanceDto>>(response);
     }
@@ -94,16 +85,13 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         Sort s = Sort.by(direction, "returnDate");
 
         List<CarMaintenance> result = this.carMaintenanceDao.findAll(s);
-        List<CarMaintenanceDto> response = result.stream()
-                .map(carMaintenance -> this.modelMapperService.forDto()
-                        .map(carMaintenance, CarMaintenanceDto.class))
-                .collect(Collectors.toList());
+        List<CarMaintenanceDto> response = result.stream().map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<CarMaintenanceDto>>(response);
     }
 
     @Override
-    public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException {
+    public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
         CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequest, CarMaintenance.class);
 
         if (checkCarIdExist(carMaintenance.getCarId()) && checkIsRented(carMaintenance)) {
@@ -149,7 +137,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         return Objects.nonNull(carMaintenanceDao.getCarMaintenanceById(carMaintenance.getId()));
     }
 
-    private boolean checkIsRented(CarMaintenance carMaintenance) throws BusinessException {
+    private boolean checkIsRented(CarMaintenance carMaintenance) {
         List<Rental> result = this.rentalDao.getRentalsByCarId(carMaintenance.getCarId());
 
         if (result == null) {
@@ -161,12 +149,12 @@ public class CarMaintenanceManager implements CarMaintenanceService {
             if (rental.getReturnDate() != null
                     && carMaintenance.getReturnDate().isAfter(rental.getRentDate())
                     && carMaintenance.getReturnDate().isBefore((rental.getReturnDate()))) {
-                throw new BusinessException("Car can not sent to Maintenance, it is on rent.");
+                return false;
             }
             if (rental.getReturnDate() == null
                     && carMaintenance.getReturnDate().isAfter(rental.getRentDate())
                     || carMaintenance.getReturnDate().equals(rental.getRentDate())) {
-                throw new BusinessException("Car can not sent to Maintenance, it is on rent. / null return date.");
+                return false;
             }
         }
         return true;

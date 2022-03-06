@@ -56,9 +56,9 @@ public class RentalManager implements RentalService {
     public SuccessDataResult<RentalDto> getById(int id) {
         Rental rental = rentalDao.getById(id);
 
-        RentalDto rentalDto = modelMapperService.forDto().map(rental, RentalDto.class);
+        RentalDto response = modelMapperService.forDto().map(rental, RentalDto.class);
 
-        return new SuccessDataResult<RentalDto>("Rental with given ID found");
+        return new SuccessDataResult<RentalDto>("Rental with given ID found", response);
     }
 
     @Override
@@ -87,10 +87,7 @@ public class RentalManager implements RentalService {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
         List<Rental> result = this.rentalDao.findAll(pageable).getContent();
-        List<RentalDto> response = result.stream()
-                .map(rental -> this.modelMapperService.forDto()
-                        .map(rental, RentalDto.class))
-                .collect(Collectors.toList());
+        List<RentalDto> response = result.stream().map(rental -> this.modelMapperService.forDto().map(rental, RentalDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<RentalDto>>(response);
     }
@@ -100,10 +97,7 @@ public class RentalManager implements RentalService {
         Sort s = Sort.by(direction, "rentDate");
 
         List<Rental> result = this.rentalDao.findAll(s);
-        List<RentalDto> response = result.stream()
-                .map(rental -> this.modelMapperService.forDto()
-                        .map(rental, RentalDto.class))
-                .collect(Collectors.toList());
+        List<RentalDto> response = result.stream().map(rental -> this.modelMapperService.forDto().map(rental, RentalDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<RentalDto>>(response);
     }
@@ -113,10 +107,7 @@ public class RentalManager implements RentalService {
         Sort s = Sort.by(direction, "returnDate");
 
         List<Rental> result = this.rentalDao.findAll(s);
-        List<RentalDto> response = result.stream()
-                .map(rental -> this.modelMapperService.forDto()
-                        .map(rental, RentalDto.class))
-                .collect(Collectors.toList());
+        List<RentalDto> response = result.stream().map(rental -> this.modelMapperService.forDto().map(rental, RentalDto.class)).collect(Collectors.toList());
 
         return new SuccessDataResult<List<RentalDto>>(response);
     }
@@ -125,10 +116,7 @@ public class RentalManager implements RentalService {
     public Result add(CreateRentalRequest createRentalRequest) throws BusinessException {
         Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 
-        if (checkCarIdExist(rental.getCarId())
-                && checkCustomerIdExist(rental.getCustomerId())
-                && checkIsUnderMaintenance(rental)
-        ) {
+        if (checkCarIdExist(rental.getCarId()) && checkCustomerIdExist(rental.getCustomerId()) && checkIsUnderMaintenance(rental)) {
             this.rentalDao.save(rental);
 
             return new SuccessResult("Rental added: " + rental);
@@ -177,7 +165,7 @@ public class RentalManager implements RentalService {
         return Objects.nonNull(rentalDao.getRentalsById(rental.getId()));
     }
 
-    private boolean checkIsUnderMaintenance(Rental rental) throws BusinessException {
+    private boolean checkIsUnderMaintenance(Rental rental) {
         List<CarMaintenance> result = this.carMaintenanceDao.getCarMaintenanceByCarId(rental.getCarId());
 
         if (result == null) {
@@ -185,9 +173,8 @@ public class RentalManager implements RentalService {
         }
 
         for (CarMaintenance carMaintenance : result) {
-            if (rental.getRentDate().isBefore(carMaintenance.getReturnDate()) ||
-                    rental.getReturnDate().isBefore(carMaintenance.getReturnDate())) {
-                throw new BusinessException("This car is can not be rented, it is under Maintenance");
+            if (rental.getRentDate().isBefore(carMaintenance.getReturnDate()) || rental.getReturnDate().isBefore(carMaintenance.getReturnDate())) {
+                return false;
             }
         }
         return true;
