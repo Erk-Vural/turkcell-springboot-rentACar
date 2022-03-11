@@ -53,28 +53,16 @@ public class CarController {
 
     @PostMapping("/add")
     public Result add(@RequestBody CreateCarRequest createCarRequest) {
-        try {
-            return this.carService.add(createCarRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.carService.add(createCarRequest);
     }
 
     @PutMapping("/update")
     public Result update(@RequestBody UpdateCarRequest updateCarRequest) {
-        try {
-            return this.carService.update(updateCarRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.carService.update(updateCarRequest);
     }
 
     @DeleteMapping("/delete")
     public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) {
-        try {
-            return this.carService.delete(deleteCarRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.carService.delete(deleteCarRequest);
     }
 }

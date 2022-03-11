@@ -5,6 +5,7 @@ import com.erkvural.rentacar.business.dtos.CarMaintenanceDto;
 import com.erkvural.rentacar.business.requests.carmaintenance.CreateCarMaintenanceRequest;
 import com.erkvural.rentacar.business.requests.carmaintenance.DeleteCarMaintenanceRequest;
 import com.erkvural.rentacar.business.requests.carmaintenance.UpdateCarMaintenanceRequest;
+import com.erkvural.rentacar.core.exceptions.BusinessException;
 import com.erkvural.rentacar.core.utilities.results.DataResult;
 import com.erkvural.rentacar.core.utilities.results.ErrorResult;
 import com.erkvural.rentacar.core.utilities.results.Result;
@@ -52,29 +53,17 @@ public class CarMaintenanceController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CreateCarMaintenanceRequest createCarMaintenanceRequest) {
-        try {
-            return this.carMaintenanceService.add(createCarMaintenanceRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+    public Result add(@RequestBody CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException {
+        return this.carMaintenanceService.add(createCarMaintenanceRequest);
     }
 
     @PutMapping("/update")
-    public Result update(@RequestBody UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
-        try {
-            return this.carMaintenanceService.update(updateCarMaintenanceRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+    public Result update(@RequestBody UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException {
+        return this.carMaintenanceService.update(updateCarMaintenanceRequest);
     }
 
     @DeleteMapping("/delete")
     public Result delete(@RequestBody DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
-        try {
-            return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
     }
 }

@@ -36,28 +36,16 @@ public class ColorController {
 
     @PostMapping("/add")
     public Result add(@RequestBody CreateColorRequest createColorRequest) {
-        try {
-            return this.colorService.add(createColorRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.colorService.add(createColorRequest);
     }
 
     @PutMapping("/update")
     public Result update(@RequestBody UpdateColorRequest updateColorRequest) {
-        try {
-            return this.colorService.update(updateColorRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.colorService.update(updateColorRequest);
     }
 
     @DeleteMapping("/delete")
     public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) {
-        try {
-            return this.colorService.delete(deleteColorRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.colorService.delete(deleteColorRequest);
     }
 }

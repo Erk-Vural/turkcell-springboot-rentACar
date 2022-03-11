@@ -5,6 +5,7 @@ import com.erkvural.rentacar.business.dtos.RentalDto;
 import com.erkvural.rentacar.business.requests.rental.CreateRentalRequest;
 import com.erkvural.rentacar.business.requests.rental.DeleteRentalRequest;
 import com.erkvural.rentacar.business.requests.rental.UpdateRentalRequest;
+import com.erkvural.rentacar.core.exceptions.BusinessException;
 import com.erkvural.rentacar.core.utilities.results.ErrorResult;
 import com.erkvural.rentacar.core.utilities.results.Result;
 import com.erkvural.rentacar.core.utilities.results.SuccessDataResult;
@@ -60,29 +61,17 @@ public class RentalController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CreateRentalRequest createRentalRequest) {
-        try {
-            return this.rentalService.add(createRentalRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+    public Result add(@RequestBody CreateRentalRequest createRentalRequest) throws BusinessException {
+        return this.rentalService.add(createRentalRequest);
     }
 
     @PutMapping("/update")
-    public Result update(@RequestBody UpdateRentalRequest updateRentalRequest) {
-        try {
-            return this.rentalService.update(updateRentalRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+    public Result update(@RequestBody UpdateRentalRequest updateRentalRequest) throws BusinessException {
+        return this.rentalService.update(updateRentalRequest);
     }
 
     @DeleteMapping("/delete")
     public Result delete(@RequestBody DeleteRentalRequest deleteRentalRequest) {
-        try {
-            return this.rentalService.delete(deleteRentalRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.rentalService.delete(deleteRentalRequest);
     }
 }

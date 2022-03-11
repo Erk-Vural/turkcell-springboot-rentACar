@@ -62,12 +62,15 @@ public class RentalManager implements RentalService {
     }
 
     @Override
-    public SuccessDataResult<List<RentalDto>> getByCarId(int id) {
-        Car car = this.carDao.getById(id);
+    public SuccessDataResult<List<RentalDto>> getByCarId(int carId) {
+        Car car = this.carDao.getById(carId);
 
         List<Rental> result = this.rentalDao.getRentalsByCarId(car);
 
-        List<RentalDto> response = result.stream().map(rental -> this.modelMapperService.forDto().map(rental, RentalDto.class)).collect(Collectors.toList());
+        List<RentalDto> response = result.stream()
+                .map(rental -> this.modelMapperService.forDto()
+                        .map(rental, RentalDto.class))
+                .collect(Collectors.toList());
 
         return new SuccessDataResult<List<RentalDto>>("Success", response);
     }
@@ -153,7 +156,7 @@ public class RentalManager implements RentalService {
             return new SuccessResult("Rental deleted with id: " + rental.getId());
         }
 
-        return new ErrorResult("Rental can't be updated (Rental with given Id not exists) " + rental);
+        return new ErrorResult("Rental can't be deleted (Rental with given Id not exists) " + rental);
     }
 
     private boolean checkCarIdExist(Car car) {

@@ -36,29 +36,17 @@ public class BrandController {
 
     @PostMapping("/add")
     public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
-        try {
-            return this.brandService.add(createBrandRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.brandService.add(createBrandRequest);
 
     }
 
     @PutMapping("/update")
     public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) {
-        try {
-            return this.brandService.update(updateBrandRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.brandService.update(updateBrandRequest);
     }
 
     @DeleteMapping("/Delete")
     public Result delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
-        try {
-            return this.brandService.delete(deleteBrandRequest);
-        } catch (Exception e) {
-            return new ErrorResult(e.getMessage());
-        }
+        return this.brandService.delete(deleteBrandRequest);
     }
 }
